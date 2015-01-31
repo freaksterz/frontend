@@ -11,10 +11,12 @@ import com.dev.frontend.services.Services;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
+import org.json.JSONString;
+import sun.org.mozilla.javascript.internal.json.JsonParser;
 
 
-
-public class EditCustomer extends EditContentPanel 
+public class EditCustomer extends EditContentPanel
 {
 	private static final long serialVersionUID = -8971249970444644844L;
 	private JTextField txtCode = new JTextField();
@@ -141,26 +143,22 @@ public class EditCustomer extends EditContentPanel
 	 */
 	public boolean bindToGUI(Object o) 
 	{
-	
-		try {
-			
-		Gson gson = new Gson();
-		JsonElement element = gson.fromJson ((String) o, JsonElement.class);
-		JsonObject jsonObj = element.getAsJsonObject();
-		
-		txtCode.setText(jsonObj.get("custCode").toString());
-		txtName.setText(jsonObj.getAsJsonObject().get("custName").toString());
-		txtAddress.setText(jsonObj.getAsJsonObject().get("adress").toString());
-		txtPhone1.setText(jsonObj.getAsJsonObject().get("phone1").toString());
-		txtPhone2.setText(jsonObj.getAsJsonObject().get("phone2").toString());
-		txtCreditLimit.setText(jsonObj.getAsJsonObject().get("creditLimit").toString());
-		txtCurrentCredit.setText(jsonObj.getAsJsonObject().get("currentLimit").toString());
-		return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return false;
-		}
+        try {
+        Gson gson = new Gson();
+        JsonElement element = gson.fromJson ((String) o, JsonElement.class);
+        JsonObject jsonObj = element.getAsJsonObject();
+        txtCode.setText(jsonObj.get("custCode").getAsString());
+        txtName.setText(jsonObj.getAsJsonObject().get("custName").getAsString());
+        txtAddress.setText(jsonObj.getAsJsonObject().get("adress").getAsString());
+        txtPhone1.setText(jsonObj.getAsJsonObject().get("phone1").getAsString());
+        txtPhone2.setText(jsonObj.getAsJsonObject().get("phone2").getAsString());
+        txtCreditLimit.setText(jsonObj.getAsJsonObject().get("creditLimit").getAsString());
+        txtCurrentCredit.setText(jsonObj.getAsJsonObject().get("currentLimit").getAsString());
+        return true;
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
 		
 	}
 
