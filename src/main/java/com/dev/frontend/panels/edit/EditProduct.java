@@ -88,16 +88,16 @@ public class EditProduct extends EditContentPanel
 	public boolean bindToGUI(Object o) 
 	{
 		try {
-			
-			Gson gson = new Gson();
+
+            Gson gson = new Gson();
 			JsonElement element = gson.fromJson ((String) o, JsonElement.class);
 			JsonObject jsonObj = element.getAsJsonObject();
-			
-			txtCode.setText(jsonObj.get("productCode").toString());
-			txtDescription.setText(jsonObj.getAsJsonObject().get("description").toString());
-			txtQuantity.setText(jsonObj.getAsJsonObject().get("price").toString());
-			txtPrice.setText(jsonObj.getAsJsonObject().get("prodQuantity").toString());
-	
+
+            txtCode.setText(jsonObj.get("productCode").getAsString());
+			txtDescription.setText(jsonObj.get("description").getAsString());
+			txtQuantity.setText(jsonObj.get("price").getAsString());
+			txtPrice.setText(jsonObj.get("prodQuantity").getAsString());
+
 			return true;
 			} catch (Exception e) {
 				// TODO: handle exception

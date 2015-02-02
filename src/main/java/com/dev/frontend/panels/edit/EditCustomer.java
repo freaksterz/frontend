@@ -147,6 +147,7 @@ public class EditCustomer extends EditContentPanel
         Gson gson = new Gson();
         JsonElement element = gson.fromJson ((String) o, JsonElement.class);
         JsonObject jsonObj = element.getAsJsonObject();
+
         txtCode.setText(jsonObj.get("custCode").getAsString());
         txtName.setText(jsonObj.getAsJsonObject().get("custName").getAsString());
         txtAddress.setText(jsonObj.getAsJsonObject().get("adress").getAsString());
@@ -154,6 +155,7 @@ public class EditCustomer extends EditContentPanel
         txtPhone2.setText(jsonObj.getAsJsonObject().get("phone2").getAsString());
         txtCreditLimit.setText(jsonObj.getAsJsonObject().get("creditLimit").getAsString());
         txtCurrentCredit.setText(jsonObj.getAsJsonObject().get("currentLimit").getAsString());
+
         return true;
         } catch (Exception e) {
         e.printStackTrace();

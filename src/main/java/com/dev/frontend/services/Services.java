@@ -17,27 +17,25 @@ public class Services
 	public static final int TYPE_PRODUCT = 1;
 	public static final int TYPE_CUSTOMER = 2;
 	public static final int TYPE_SALESORDER = 3;
-	
-	
-	public static Object save(Object object,int objectType)
-	{
-		//TODO by the candidate 
-		/*
+	/*
 		 * This method is called eventually after you click save on any edit screen
 		 * object parameter is the return object from calling method guiToObject on edit screen
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
-		 * TYPE_CUSTOMER or TYPE_SALESORDER 
-		 */ 
-		 String baseURI = null;
+		 * TYPE_CUSTOMER or TYPE_SALESORDER
+	*/
+
+    public static Object save(Object object,int objectType)
+	{
+            String baseURI = null;
 		 JsonObject jsonObject = (JsonObject) object;
 		 if (objectType == TYPE_PRODUCT ){
-			 baseURI = "http://localhost:8080/salesorderapp/rest/Prodcuts/";
+			 baseURI = "http://localhost:8080/salesorderapp/rest/Products/";
 			 
 		 }else if (objectType == TYPE_CUSTOMER){
 			 baseURI = "http://localhost:8080/salesorderapp/rest/Customers/";
 			 
 		 } else if (objectType == TYPE_SALESORDER){
-			 baseURI = "http://localhost:8080/salesorderapp/ws/create/salesorder";
+			 baseURI = "http://localhost:8080/salesorderapp/ws/create/SalesOrders/";
 		 }
 		 
 		 //Converting to string request 
@@ -49,32 +47,24 @@ public class Services
 		
 	}
 	/**
-	 * method ot call webservice
+	 * This method is called to generate the request based on URI
 	 * @return 
 	 **/
 	private static String requestGenerator( String baseURI, String jsonObject) {
 		String response_return =null;
 		try {
 		       Client client = Client.create();
-
 		       WebResource webResource = client.resource(baseURI);
-		      
-		       
 		       // POST method
-		     
 		       ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).post(ClientResponse.class, jsonObject);
 		       
 		        // check response status code
 		        if (response.getStatus() != 200) {
-		            throw new RuntimeException("Failed : HTTP error code : "
-		                    + response.getStatus());
+		            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 		        }
-
 		        // display response
 		        response_return = response.getEntity(String.class);
-		        
-		        
-		        
+
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }

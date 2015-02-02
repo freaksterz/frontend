@@ -223,14 +223,13 @@ public class EditSalesOrder extends EditContentPanel
 			Gson gson = new Gson();
 			JsonElement element = gson.fromJson ((String) o, JsonElement.class);
 			JsonObject jsonObj = element.getAsJsonObject();
-			//TODO map with data sales oder
 	
-			txtOrderNum.setText(jsonObj.get("orderNumber").toString());
-			//txtTotalPrice.setText(jsonObj.getAsJsonObject().get("custName").toString());
-			//txtCustomer.setText(jsonObj.getAsJsonObject().get("adress").toString());
-			//txtCustomer.setSelectedItem(jsonObj.getAsJsonObject().get("customer").toString());
+			txtOrderNum.setText(jsonObj.get("orderNumber").getAsString());
+			txtTotalPrice.setText(jsonObj.get("totalPrice").getAsString());
+			txtCustomer.setSelectedItem(jsonObj.getAsJsonObject().get("custName").getAsString());
 			txtQuantity.setText(jsonObj.getAsJsonObject().get("quantiy").toString());
 			txtProduct.setSelectedItem(jsonObj.getAsJsonObject().get("productCode").toString());
+            //defaultTableModel.addRow(new String[] { productCode, "" + qty, "" + price, "" + totalPrice, "" });
 			
 			return true;
 			} catch (Exception e) {
@@ -241,14 +240,22 @@ public class EditSalesOrder extends EditContentPanel
 		
 		
 	}
-
+    /**
+	 * This method collect values from screen widgets and convert them to object of your type
+	 * This object will be used as a parameter of method Services.save
+	 */
 	public Object guiToObject() {
-		// TODO by the candidate
-		/*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
-		return null;
+        JsonObject jsonCustomerObject = new JsonObject();
+        jsonCustomerObject.addProperty("orderNumber", txtOrderNum.getText());
+        jsonCustomerObject.addProperty("totalPrice", txtTotalPrice.getText());
+        jsonCustomerObject.addProperty("custName", txtCustomer.getSelectedItem().toString());
+        jsonCustomerObject.addProperty("quantiy", txtQuantity.getText());
+        jsonCustomerObject.addProperty("productCode", txtProduct.getSelectedItem().toString());
+        //jsonCustomerObject.addProperty("currentLimit", txtCurrentCredit.getText());
+
+
+        return jsonCustomerObject;
+
 	}
 
 	public int getObjectType()
