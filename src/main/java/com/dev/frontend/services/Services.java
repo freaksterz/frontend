@@ -26,18 +26,9 @@ public class Services
 
     public static Object save(Object object,int objectType)
 	{
-            String baseURI = null;
-		 JsonObject jsonObject = (JsonObject) object;
-		 if (objectType == TYPE_PRODUCT ){
-			 baseURI = "http://localhost:8080/salesorderapp/rest/Products/";
-			 
-		 }else if (objectType == TYPE_CUSTOMER){
-			 baseURI = "http://localhost:8080/salesorderapp/rest/Customers/";
-			 
-		 } else if (objectType == TYPE_SALESORDER){
-			 baseURI = "http://localhost:8080/salesorderapp/ws/create/SalesOrders/";
-		 }
-		 
+        String baseURI = getString(objectType);
+
+          JsonObject jsonObject = (JsonObject) object;
 		 //Converting to string request 
 	       Gson gson = new Gson();
 	       String jsonString = gson.toJson(jsonObject);
@@ -46,7 +37,28 @@ public class Services
 		return obString;
 		
 	}
-	/**
+
+    /**
+     * This method is called to get the BASE URI accroding to the Object Type.
+     * @param objectType
+     * @return
+     */
+    private static String getString(int objectType) {
+        String baseURI = null;
+
+        if (objectType == TYPE_PRODUCT ){
+            baseURI = "http://localhost:8080/salesorderapp/rest/Products/";
+
+        }else if (objectType == TYPE_CUSTOMER){
+            baseURI = "http://localhost:8080/salesorderapp/rest/Customers/";
+
+        } else if (objectType == TYPE_SALESORDER){
+            baseURI = "http://localhost:8080/salesorderapp/ws/create/SalesOrders/";
+        }
+        return baseURI;
+    }
+
+    /**
 	 * This method is called to generate the request based on URI
 	 * @return 
 	 **/
@@ -92,13 +104,14 @@ public class Services
 		 */ 
 		return true;
 	}
-	
+    /*
+     * This method is called when you open any list screen and should return all records of the specified type
+     */
 	public static List<Object> listCurrentRecords(int objectType)
 	{
-		//TODO by the candidate
-		/*
-		 * This method is called when you open any list screen and should return all records of the specified type
-		 */
+        String baseURI = getString(objectType);
+        String obString = requestGenerator( baseURI, null);
+
 		return new ArrayList<Object>();
 	}
 	public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) 
