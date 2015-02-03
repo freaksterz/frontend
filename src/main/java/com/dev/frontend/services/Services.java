@@ -33,7 +33,7 @@ public class Services
 	       Gson gson = new Gson();
 	       String jsonString = gson.toJson(jsonObject);
 		 
-		 String obString = requestGenerator( baseURI, jsonString);
+		 String obString = requestGenerator( baseURI, jsonString,"post");
 		return obString;
 		
 	}
@@ -62,14 +62,19 @@ public class Services
 	 * This method is called to generate the request based on URI
 	 * @return 
 	 **/
-	private static String requestGenerator( String baseURI, String jsonObject) {
+	private static String requestGenerator( String baseURI, String jsonObject, String protocol) {
 		String response_return =null;
 		try {
 		       Client client = Client.create();
 		       WebResource webResource = client.resource(baseURI);
+			ClientResponse response = null;
 		       // POST method
-		       ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).post(ClientResponse.class, jsonObject);
-		       
+			if("post".equals(protocol)) {
+				 response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).post(ClientResponse.class, jsonObject);
+				}
+			if ("get".equals(protocol)) {
+				 response = webResource.accept(MediaType.APPLICATION_JSON_TYPE).get(ClientResponse.class);
+			}
 		        // check response status code
 		        if (response.getStatus() != 200) {
 		            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
@@ -110,7 +115,9 @@ public class Services
 	public static List<Object> listCurrentRecords(int objectType)
 	{
         String baseURI = getString(objectType);
-        String obString = requestGenerator( baseURI, null);
+		baseURI = baseURI + "all/";
+
+        String obString = requestGenerator( baseURI, null, "get");
 
 		return new ArrayList<Object>();
 	}
