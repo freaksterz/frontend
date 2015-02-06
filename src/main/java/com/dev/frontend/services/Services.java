@@ -1,5 +1,6 @@
 package com.dev.frontend.services;
 
+import java.lang.Object;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,12 @@ import javax.ws.rs.core.MediaType;
 import com.dev.frontend.panels.ComboBoxItem;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.json.JSONArray;
+import org.omg.CORBA.*;
 
 public class Services 
 {
@@ -33,8 +37,8 @@ public class Services
 	       Gson gson = new Gson();
 	       String jsonString = gson.toJson(jsonObject);
 		 
-		 String obString = requestGenerator( baseURI, jsonString,"post");
-		return obString;
+		 ClientResponse response = requestGenerator( baseURI, jsonString,"post");
+		return response.getEntity(String.class);
 		
 	}
 
@@ -62,12 +66,14 @@ public class Services
 	 * This method is called to generate the request based on URI
 	 * @return 
 	 **/
-	private static String requestGenerator( String baseURI, String jsonObject, String protocol) {
-		String response_return =null;
+
+	private static ClientResponse requestGenerator( String baseURI, String jsonObject, String protocol) {
+		//String response_return =null;
+		ClientResponse response = null;
 		try {
 		       Client client = Client.create();
 		       WebResource webResource = client.resource(baseURI);
-			ClientResponse response = null;
+
 		       // POST method
 			if("post".equals(protocol)) {
 				 response = webResource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).post(ClientResponse.class, jsonObject);
@@ -80,12 +86,12 @@ public class Services
 		            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 		        }
 		        // display response
-		        response_return = response.getEntity(String.class);
+		       // response_return = response.getEntity(String.class);
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
-		return response_return;
+		return response;
 	}
 	public static Object readRecordByCode(String code,int objectType)
 	{
@@ -117,9 +123,10 @@ public class Services
         String baseURI = getString(objectType);
 		baseURI = baseURI + "all/";
 
-        String obString = requestGenerator( baseURI, null, "get");
-
-		return new ArrayList<Object>();
+        ClientResponse response = requestGenerator( baseURI, null, "get");
+		JSONArray ja = response.getEntity(JSONArray.class);
+		ArrayList<Object> custArray = new Gson().fromJson(ja.toString(), new TypeToken<List<Object>>(){}.getType());
+		return custArray;
 	}
 	public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) 
 	{	
